@@ -1,0 +1,110 @@
+class ContactManager:
+    def __init__(self):
+        self.contacts = []
+
+    def add_contact(self, name, phone, email, address):
+        """Add a new contact to the list."""
+        self.contacts.append({
+            "name": name,
+            "phone": phone,
+            "email": email,
+            "address": address
+        })
+        print(f"Contact '{name}' added successfully!\n")
+
+    def view_contacts(self):
+        """Display all saved contacts."""
+        if not self.contacts:
+            print("\nNo contacts found.\n")
+            return
+        print("\nContact List:")
+        for idx, contact in enumerate(self.contacts, start=1):
+            print(f"{idx}. {contact['name']} - {contact['phone']}")
+        print()
+
+    def search_contact(self, search_term):
+        """Search for contacts by name or phone number."""
+        results = [contact for contact in self.contacts
+                   if search_term.lower() in contact['name'].lower() or search_term in contact['phone']]
+        if not results:
+            print(f"No contacts found for '{search_term}'.\n")
+            return
+        print("\nSearch Results:")
+        for contact in results:
+            self.display_contact_details(contact)
+
+    def update_contact(self, search_term):
+        """Update details of a specific contact."""
+        for contact in self.contacts:
+            if search_term.lower() == contact['name'].lower() or search_term == contact['phone']:
+                print("Contact found:")
+                self.display_contact_details(contact)
+                contact['name'] = input("Enter new name (leave blank to keep current): ") or contact['name']
+                contact['phone'] = input("Enter new phone number (leave blank to keep current): ") or contact['phone']
+                contact['email'] = input("Enter new email (leave blank to keep current): ") or contact['email']
+                contact['address'] = input("Enter new address (leave blank to keep current): ") or contact['address']
+                print("Contact updated successfully!\n")
+                return
+        print(f"No contact found for '{search_term}'.\n")
+
+    def delete_contact(self, search_term):
+        """Delete a contact by name or phone number."""
+        for idx, contact in enumerate(self.contacts):
+            if search_term.lower() == contact['name'].lower() or search_term == contact['phone']:
+                self.contacts.pop(idx)
+                print(f"Contact '{contact['name']}' deleted successfully!\n")
+                return
+        print(f"No contact found for '{search_term}'.\n")
+
+    def display_contact_details(self, contact):
+        """Display full details of a single contact."""
+        print(f"Name: {contact['name']}")
+        print(f"Phone: {contact['phone']}")
+        print(f"Email: {contact['email']}")
+        print(f"Address: {contact['address']}\n")
+
+
+def main():
+    manager = ContactManager()
+    while True:
+        print("\nContact Management System")
+        print("1. Add Contact")
+        print("2. View Contacts")
+        print("3. Search Contact")
+        print("4. Update Contact")
+        print("5. Delete Contact")
+        print("6. Exit")
+        choice = input("Choose an option (1-6): ").strip()
+
+        if choice == "1":
+            name = input("Enter name: ").strip()
+            phone = input("Enter phone number: ").strip()
+            email = input("Enter email: ").strip()
+            address = input("Enter address: ").strip()
+            manager.add_contact(name, phone, email, address)
+
+        elif choice == "2":
+            manager.view_contacts()
+
+        elif choice == "3":
+            search_term = input("Enter name or phone number to search: ").strip()
+            manager.search_contact(search_term)
+
+        elif choice == "4":
+            search_term = input("Enter name or phone number to update: ").strip()
+            manager.update_contact(search_term)
+
+        elif choice == "5":
+            search_term = input("Enter name or phone number to delete: ").strip()
+            manager.delete_contact(search_term)
+
+        elif choice == "6":
+            print("Exiting the Contact Management System. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice! Please choose a valid option.\n")
+
+
+if __name__ == "__main__":
+    main()
